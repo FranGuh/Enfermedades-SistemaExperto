@@ -15,22 +15,22 @@ def eliminar_objeto(id_objeto):
         db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
 
         # Consulta para obtener el nombre del objeto por ID
-        query = "SELECT Nombre FROM objeto WHERE Id_Objeto = %s"
+        query = "SELECT Nombre FROM Enfermedad WHERE Id_Enfermedad = %s"
         resultado = db_controlador.obtener_datos(query, (id_objeto,))
 
         if resultado:
             nombre_objeto = resultado[0][0]  # Nombre del objeto
             # Pregunta si desea eliminar el objeto
-            if messagebox.askyesno("Confirmar Eliminación", f"¿Deseas eliminar el objeto '{nombre_objeto}'?"):
+            if messagebox.askyesno("Confirmar Eliminación", f"¿Deseas eliminar la enfermedad '{nombre_objeto}'?"):
                 # Ejecutar eliminación
-                query_delete = "DELETE FROM objeto WHERE Id_Objeto = %s"
+                query_delete = "DELETE FROM Enfermedad WHERE Id_Enfermedad = %s"
                 db_controlador.modificar_datos(query_delete, (id_objeto,))
-                messagebox.showinfo("Éxito", "Objeto eliminado exitosamente.")
+                messagebox.showinfo("Éxito", "Enfermedad eliminada exitosamente.")
         else:
-            messagebox.showinfo("Advertencia", "No se encontró ningún objeto con ese ID.")
+            messagebox.showinfo("Advertencia", "No se encontró ninguna Enfermedad con ese ID.")
 
     except Exception as e:
-        messagebox.showinfo("Error", f"Error al eliminar objeto: {e}")
+        messagebox.showinfo("Error", f"Error al eliminar Enfermedad: {e}")
 
     finally:
         db_controlador.cerrar_conexion()
@@ -42,17 +42,17 @@ def ventana_bajas():
             eliminar_objeto(id_objeto)  # Llama a la función para eliminar el objeto
             ventana_bajas.destroy()  # Destruye la ventana de bajas
         else:
-            messagebox.showinfo("Advertencia", "Por favor, ingresa un ID de objeto.")
+            messagebox.showinfo("Advertencia", "Por favor, ingresa un ID de Enfermedad.")
 
     # Crear ventana para ingresar el ID
     ventana_bajas = tk.Toplevel()
-    ventana_bajas.title("Eliminar Objeto")
+    ventana_bajas.title("Eliminar Enfermedad")
 
-    tk.Label(ventana_bajas, text="ID del Objeto a Eliminar:").pack()
+    tk.Label(ventana_bajas, text="ID de Enfermedad a Eliminar:").pack()
     id_entry = tk.Entry(ventana_bajas)  # Definimos id_entry aquí
     id_entry.pack(pady=5)
 
-    buscar_btn = tk.Button(ventana_bajas, text="Eliminar Objeto", command=obtener_id_y_eliminar)
+    buscar_btn = tk.Button(ventana_bajas, text="Eliminar Enfermedad", command=obtener_id_y_eliminar)
     buscar_btn.pack(pady=5)
 
     # Centrar la ventana

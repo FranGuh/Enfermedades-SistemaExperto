@@ -10,7 +10,7 @@ def ventana_modificacion(id_objeto):
             db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
 
             # Consulta para obtener los datos del objeto
-            query = "SELECT Nombre, Descripcion, Imagen FROM objeto WHERE Id_Objeto = %s"
+            query = "SELECT Nombre, Descripcion, Imagen FROM Enfermedad WHERE Id_Enfermedad = %s"
             resultado = db_controlador.obtener_datos(query, (id_objeto,))
 
             if resultado:
@@ -32,7 +32,7 @@ def ventana_modificacion(id_objeto):
                 else:
                     messagebox.showwarning("Advertencia", "La imagen no se encontró.")
             else:
-                messagebox.showwarning("Advertencia", "No se encontró ningún objeto con ese ID.")
+                messagebox.showwarning("Advertencia", "No se encontró ningúna enfermedad con ese ID.")
                 ventana_modificacion.destroy()  # Destruir la ventana si no se encuentra el ID
                 
         except Exception as e:
@@ -51,17 +51,17 @@ def ventana_modificacion(id_objeto):
                 db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
 
                 # Preparar la consulta de actualización
-                query = "UPDATE objeto SET Nombre = %s, Descripcion = %s, Imagen = %s WHERE Id_Objeto = %s"
+                query = "UPDATE Enfermedad SET Nombre = %s, Descripcion = %s, Imagen = %s WHERE Id_Enfermedad = %s"
                 db_controlador.modificar_datos(query, (nuevo_nombre, nueva_descripcion, nueva_imagen, id_objeto))
 
                 # Mostrar mensaje de éxito
-                messagebox.showinfo("Éxito", "Objeto modificado exitosamente.")
+                messagebox.showinfo("Éxito", "Enfermedad modificada exitosamente.")
                 
                 # Cerrar ventana de modificación
                 ventana_modificacion.destroy()
 
             except Exception as e:
-                messagebox.showerror("Error", f"Error al modificar objeto: {e}")
+                messagebox.showerror("Error", f"Error al modificar enfermedad: {e}")
 
             finally:
                 db_controlador.cerrar_conexion()
@@ -137,26 +137,26 @@ def ventana_ingreso_id2():
             # Comprobar si el ID existe antes de abrir la ventana de modificación
             try:
                 db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
-                query = "SELECT * FROM objeto WHERE Id_Objeto = %s"
+                query = "SELECT * FROM Enfermedad WHERE Id_Enfermedad = %s"
                 resultado = db_controlador.obtener_datos(query, (id_objeto,))
 
                 if resultado:
                     ventana_modificacion(id_objeto)  # Llama a la función modificar con el ID ingresado
                     ventana_ingreso.destroy()  # Destruye la ventana de ingreso de ID
                 else:
-                    messagebox.showwarning("Advertencia", "No se encontró un objeto con ese ID.")
+                    messagebox.showwarning("Advertencia", "No se encontró una enfermedad con ese ID.")
 
             except Exception as e:
-                messagebox.showerror("Error", f"Error al buscar objeto: {e}")
+                messagebox.showerror("Error", f"Error al buscar enfermedad: {e}")
 
             finally:
                 db_controlador.cerrar_conexion()
         else:
-            messagebox.showwarning("Advertencia", "Por favor, ingresa un ID de objeto.")
+            messagebox.showwarning("Advertencia", "Por favor, ingresa un ID de una enfermedad.")
 
     # Crear ventana para ingresar el ID
     ventana_ingreso = tk.Toplevel()
-    ventana_ingreso.title("Buscar Objeto")
+    ventana_ingreso.title("Buscar Enfermedad")
     # ventana_ingreso.attributes('-topmost', True)  # Mantener en primer plano
 
     # Centrar la ventana
@@ -169,7 +169,7 @@ def ventana_ingreso_id2():
     ventana_ingreso.geometry(f'{window_width}x{window_height}+{x}+{y}')
     ventana_ingreso.focus_force()  # Forzar el foco en esta ventana
 
-    tk.Label(ventana_ingreso, text="ID del Objeto:").pack()
+    tk.Label(ventana_ingreso, text="ID de la Enfermedad:").pack()
     id_entry = tk.Entry(ventana_ingreso)  # Definimos id_entry aquí
     id_entry.pack(pady=5)
     id_entry.focus_set()  # Establecer el foco en el campo de ID

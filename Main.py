@@ -1,10 +1,12 @@
 import tkinter as tk
 from tkinter import ttk,messagebox, filedialog, scrolledtext
 from PIL import Image,ImageTk
+import subprocess
 #from controlador.controlador import ControladorDB
 import os
 from agregar import menu_agregarObjeto
 import shutil
+from Sintomas.agregarS import menu_agregarSintoma
 
 # Crear la ventana principal
 root = tk.Tk()
@@ -70,7 +72,7 @@ def pantalla_bienvenida():
     lbl_itz = ttk.Label(root, text="I.T.Z", font=("Arial", 28), background="#FFFFFF")
     lbl_itz.place(relx=0.5, rely=0.45, anchor="center")
 
-    lbl_sistema = ttk.Label(root, text="Sistema Experto Genérico", font=("Arial", 28), background="#FFFFFF")
+    lbl_sistema = ttk.Label(root, text="Sistema Experto para el Diagnóstico de Enfermedades", font=("Arial", 28), background="#FFFFFF")
     lbl_sistema.place(relx=0.5, rely=0.5, anchor="center")
 
     # Botón Salir en la esquina inferior izquierda
@@ -162,6 +164,9 @@ def ventana_contraseña():
     btn_aceptar_contraseña = ttk.Button(ventana, text="Aceptar", command=validar_contraseña)
     btn_aceptar_contraseña.pack(pady=20)
 
+def ejecutar_relacion():
+    subprocess.run(["python", "cuadro.py"])  # Ejecuta relacion.py
+
 # Función para el menú experto (si la contraseña es correcta)
 def menu_experto():
     limpiar_pantalla()
@@ -175,18 +180,18 @@ def menu_experto():
     lbl_titulo.pack(pady=20)
 
 
-    btn_agregarObjeto = ttk.Button(root, text="Agregar objeto", command=lambda: menu_agregarObjeto(root), image=flecha_icono, compound="left")
+    btn_agregarObjeto = ttk.Button(root, text="Agregar Enfermedad", command=lambda: menu_agregarObjeto(root), image=flecha_icono, compound="left")
     btn_agregarObjeto.place(x=600, y=150)
     btn_agregarObjeto.config(width=30, padding=(200, 30))
 
-    btn_agregarCaracteristicas = ttk.Button(root, text="Agregar Caracteristicas", command=pantalla_acerca_de, image=flecha_icono, compound="left")
+    btn_agregarCaracteristicas = ttk.Button(root, text="Agregar Síntomas",  command=lambda: menu_agregarSintoma(root), image=flecha_icono, compound="left")
     btn_agregarCaracteristicas.place(x=600, y=350)
     btn_agregarCaracteristicas.config(width=30, padding=(200, 30))
 
-    btn_agregarCuadro = ttk.Button(root, text="Agregar Cuadro", command=pantalla_acerca_de, image=flecha_icono, compound="left")
+    btn_agregarCuadro = ttk.Button(root, text="Agregar Cuadro-Relación", command=ejecutar_relacion, image=flecha_icono, compound="left")
     btn_agregarCuadro.place(x=600, y=550)
     btn_agregarCuadro.config(width=30, padding=(200, 30))
-    
+
     btn_volver = ttk.Button(root, text="Regresar", command=pantalla_bienvenida, image=flecha_icono, compound="left")
     #   btn_volver = ttk.Button(root, text="Regresar", command=pantalla_bienvenida, image=flecha_icono, compound="left"
     btn_volver.place(x=1380, y=700)
@@ -284,6 +289,7 @@ def limpiar_pantalla():
 
 # Iniciar con la pantalla de bienvenida
 pantalla_bienvenida()
+menu_experto()
 
 # Ejecutar el loop principal
 root.mainloop()

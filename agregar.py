@@ -8,11 +8,15 @@ from eliminar import ventana_bajas
 from consultar import ventana_ingreso_id2
 from controlador.controlador import ControladorDB  # Importar el controlador de base de datos
 
+
+
+
 def menu_agregarObjeto(master):
     global img_label  
     global carpeta_imagenes  
-    carpeta_imagenes = r"Imagenes\Objetos"
+    carpeta_imagenes = r"Imagenes\Enfermedad"
     os.makedirs(carpeta_imagenes, exist_ok=True)  # Crear la carpeta si no existe
+
 
     def volverPantalla():
         ventana.withdraw()
@@ -29,17 +33,17 @@ def menu_agregarObjeto(master):
                 db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
 
                 # Preparar la consulta de inserción
-                query = "INSERT INTO objeto (Nombre, Descripcion, Imagen) VALUES (%s, %s, %s)"
+                query = "INSERT INTO Enfermedad (Nombre, Descripcion, Imagen) VALUES (%s, %s, %s)"
                 db_controlador.insertar_datos(query, (nombre, descripcion, imagen))
 
                 # Mostrar un mensaje de éxito
-                messagebox.showinfo("Éxito", "Objeto agregado a la base de datos.")
+                messagebox.showinfo("Éxito", "Enfermedad agregado a la base de datos.")
                 
                 # Volver a la pantalla anterior
                 volverPantalla()
 
             except Exception as e:
-                messagebox.showerror("Error", f"No se pudo agregar el objeto a la base de datos: {e}")
+                messagebox.showerror("Error", f"No se pudo agregar la Enfermedad a la base de datos: {e}")
                 volverPantalla()
 
             finally:
@@ -50,35 +54,57 @@ def menu_agregarObjeto(master):
             messagebox.showwarning("Advertencia", "Por favor, completa todos los campos.")
             volverPantalla()
 
-
     def consultar_datos():
         ventana_consulta = tk.Toplevel(ventana)
-        ventana_consulta.title("Consulta de Objetos")
+        ventana_consulta.title("Consulta de Enfermedades")
         ventana.geometry(f'{window_width}x{window_height}+{x}+{y}') 
 
-        tree = ttk.Treeview(ventana_consulta, columns=("Id_Objeto","Nombre", "Descripcion", "Imagen"), show='headings')
-        tree.heading("Id_Objeto", text="Id_Objeto")
+        # Treeview setup
+        tree = ttk.Treeview(ventana_consulta, columns=("Id_Enfermedad", "Nombre", "Descripcion", "Peso"), show='headings')
+        tree.heading("Id_Enfermedad", text="Id_Enfermedad")
         tree.heading("Nombre", text="Nombre")
         tree.heading("Descripcion", text="Descripción")
-        tree.heading("Imagen", text="Imagen")
+        tree.heading("Peso", text="Suma")
         tree.pack(fill=tk.BOTH, expand=True)
 
         scrollbar = ttk.Scrollbar(ventana_consulta, orient="vertical", command=tree.yview)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         tree.configure(yscrollcommand=scrollbar.set)
 
+        # Label to display image
+        label_imagen = tk.Label(ventana_consulta)
+        label_imagen.pack()
+
         try:
             db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
-            query = "SELECT Id_Objeto,Nombre, Descripcion, Imagen FROM objeto"
+            query = "SELECT Id_Enfermedad, Nombre, Descripcion, Peso, Imagen FROM Enfermedad"
             objetos = db_controlador.obtener_datos(query)
 
             for objeto in objetos:
-                tree.insert('', tk.END, values=objeto)
+                tree.insert('', tk.END, values=objeto[:-1])  # insert without the image path
+
+            # Function to display image on selection
+            def mostrar_imagen(event):
+                selected_item = tree.selection()
+                if selected_item:
+                    item = tree.item(selected_item)
+                    imagen_path = objetos[tree.index(selected_item[0])][4]  # Get image path
+                    try:
+                        img = Image.open(imagen_path)
+                        img = img.resize((200, 200), Image.LANCZOS)
+                        img_tk = ImageTk.PhotoImage(img)
+                        label_imagen.config(image=img_tk)
+                        label_imagen.image = img_tk
+                    except Exception as e:
+                        messagebox.showerror("Error", f"No se pudo cargar la imagen: {e}")
+
+            tree.bind("<<TreeviewSelect>>", mostrar_imagen)
 
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo realizar la consulta: {e}")
         finally:
             db_controlador.cerrar_conexion()
+
             
     def cargar_imagen():
         file_path = filedialog.askopenfilename(
@@ -121,8 +147,33 @@ def menu_agregarObjeto(master):
 
     # Crear la ventana principal
     ventana = tk.Toplevel(master)
-    ventana.title("Agregar Objeto")
+    ventana.title("Agregar Enfermedad")
 
+    #ICONOS
+    #flecha_icono = Image.open("Imagenes/Iconos/flecha.png")   
+    #flecha_icono = flecha_icono.resize((5, 5), Image.Resampling.LANCZOS)
+    #flecha_icono = ImageTk.PhotoImage(flecha_icono)
+
+    #elimina
+    #baja_icono = Image.open("Imagenes/Iconos/baja.png")   
+    #baja_icono = baja_icono.resize((5, 5), Image.Resampling.LANCZOS)
+    #baja_icono = ImageTk.PhotoImage(baja_icono)
+
+    #insertar
+    #insert_icono = Image.open("Imagenes/Iconos/insertar.jpg")   
+    #insert_icono = insert_icono.resize((5, 5), Image.Resampling.LANCZOS)
+    #insert_icono = ImageTk.PhotoImage(insert_icono)
+
+    #consulta
+    #consult_icono = Image.open("Imagenes/Iconos/consulta.png")   
+    #consult_icono = consult_icono.resize((5, 5), Image.Resampling.LANCZOS)
+    #consult_icono = ImageTk.PhotoImage(consult_icono)
+
+    #consulta
+    #modifi_icono = Image.open("Imagenes/Iconos/modificar.png")   
+    #modifi_icono = modifi_icono.resize((5, 5), Image.Resampling.LANCZOS)
+    #modifi_icono = ImageTk.PhotoImage(modifi_icono)
+    
  # Obtener el tamaño de la pantalla
     screen_width = ventana.winfo_screenwidth()
     screen_height = ventana.winfo_screenheight()
@@ -138,7 +189,7 @@ def menu_agregarObjeto(master):
     ventana.geometry(f'{window_width}x{window_height}+{x}+{y}') 
     
     # Título centrado
-    titulo = tk.Label(ventana, text="Agregar Objeto", font=("Arial", 16))
+    titulo = tk.Label(ventana, text="Agregar Enfermedad", font=("Arial", 16))
     titulo.pack(pady=10)
 
     # Crear el marco principal
@@ -184,15 +235,15 @@ def menu_agregarObjeto(master):
     altas_btn.pack(side=tk.LEFT, padx=10)
 
     # Botón de Bajas
-    bajas_btn = tk.Button(botones_frame, text="Bajas", command=ventana_bajas)
+    bajas_btn = tk.Button(botones_frame, text="Bajas" , command=ventana_bajas)
     bajas_btn.pack(side=tk.LEFT, padx=10)
 
     # Botón de Modificaciones
-    modificaciones_btn = tk.Button(botones_frame, text="Modificaciones", command=ventana_ingreso_id)
+    modificaciones_btn = tk.Button(botones_frame, text="Modificaciones" , command=ventana_ingreso_id)
     modificaciones_btn.pack(side=tk.LEFT, padx=10)
     
      # Botón de Consultar
-    consultar_btn = tk.Button(botones_frame, text="Consultar General", command=consultar_datos)
+    consultar_btn = tk.Button(botones_frame, text="Consultar General" , command=consultar_datos)
     consultar_btn.pack(side=tk.LEFT, padx=10)
     
      # Botón de Consultar
@@ -216,14 +267,14 @@ def menu_agregarObjeto(master):
             db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
 
             # Consulta para obtener todos los objetos
-            query = "SELECT Nombre, Descripcion, Imagen FROM objeto"
+            query = "SELECT Nombre, Descripcion, Imagen FROM Enfermedad"
             objetos = db_controlador.obtener_datos(query)  # Supone que este método devuelve una lista de tuplas
 
             if objetos:
                 mostrar_objeto(current_index)  # Muestra el primer objeto
 
         except Exception as e:
-            messagebox.showerror("Error", f"No se pudo cargar los objetos: {e}")
+            messagebox.showerror("Error", f"No se pudo cargar las enfermedades: {e}")
         finally:
             db_controlador.cerrar_conexion()
 
