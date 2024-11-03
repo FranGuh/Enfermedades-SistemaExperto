@@ -5,6 +5,7 @@ import subprocess
 #from controlador.controlador import ControladorDB
 import os
 from agregar import menu_agregarObjeto
+from Usuario import mostrar_interfaz_usuario
 import shutil
 from Sintomas.agregarS import menu_agregarSintoma
 
@@ -125,6 +126,7 @@ def ventana_interfaces():
         elif opcion.get() == 2:
             messagebox.showinfo("Opción seleccionada", "Modo Usuario seleccionado")
             ventana.destroy()  # Cerrar la ventana de "Interfaces"
+            mostrar_interfaz_usuario()
         else:
             messagebox.showwarning("Advertencia", "Debe seleccionar una opción")
 
@@ -289,7 +291,6 @@ def limpiar_pantalla():
 
 # Iniciar con la pantalla de bienvenida
 pantalla_bienvenida()
-menu_experto()
 
 # Ejecutar el loop principal
 root.mainloop()
