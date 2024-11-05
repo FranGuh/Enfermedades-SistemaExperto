@@ -34,6 +34,14 @@ class BusquedaSintoma:
         #tk.Label(main_frame, text="Peso (probabilidad %):").grid(row=3, column=0, padx=5, pady=5)
         #self.peso_entry = tk.Entry(main_frame)
         #self.peso_entry.grid(row=3, column=1, padx=5, pady=5)
+        
+        # Botón para añadir la relación
+        add_button = tk.Button(main_frame, text="Añadir")
+        add_button.grid(row=4, column=0, columnspan=2, pady=20)
+        
+        # Botón para borrar las selecciones y los campos
+        clear_button = tk.Button(main_frame, text="Borrar")
+        clear_button.grid(row=5, column=0, columnspan=2, pady=10)
 
         # Tabla para mostrar las relaciones
         self.relation_table = ttk.Treeview(root, columns=("Id_Sintoma", "Nombre_Sintoma"), show="headings")
@@ -42,12 +50,9 @@ class BusquedaSintoma:
         #self.relation_table.heading("Probabilidad", text="Imagen")
         self.relation_table.pack(pady=10)
         
-        # Botón para añadir la relación
-        add_button = tk.Button(main_frame, text="Añadir")
-        add_button.grid(row=4, column=0, columnspan=2, pady=20)
         
         # Botón para borrar las selecciones y los campos
-        clear_button = tk.Button(main_frame, text="Borrar")
+        clear_button = tk.Button(main_frame, text="Infiere")
         clear_button.grid(row=5, column=0, columnspan=2, pady=10)
 
 # Creación de la ventana
