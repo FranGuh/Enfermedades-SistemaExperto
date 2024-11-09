@@ -291,6 +291,7 @@ def limpiar_pantalla():
 
 # Iniciar con la pantalla de bienvenida
 pantalla_bienvenida()
+mostrar_interfaz_usuario()
 
 # Ejecutar el loop principal
 root.mainloop()
