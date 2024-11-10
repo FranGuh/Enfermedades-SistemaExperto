@@ -7,10 +7,10 @@ from controlador.controlador import ControladorDB  # Asegúrate de tener el cont
 def ventana_modificacion(id_objeto):
     def cargar_datos():
         try:
-            db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
+            db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
 
             # Consulta para obtener los datos del objeto
-            query = "SELECT Nombre, Descripcion, Imagen FROM Enfermedad WHERE Id_Enfermedad = %s"
+            query = "SELECT Nombre, Descripcion, Imagen FROM Deporte WHERE Id_Deporte = %s"
             resultado = db_controlador.obtener_datos(query, (id_objeto,))
 
             if resultado:
@@ -32,7 +32,7 @@ def ventana_modificacion(id_objeto):
                 else:
                     messagebox.showwarning("Advertencia", "La imagen no se encontró.")
             else:
-                messagebox.showwarning("Advertencia", "No se encontró ningúna enfermedad con ese ID.")
+                messagebox.showwarning("Advertencia", "No se encontró ningún deporte con ese ID.")
                 ventana_modificacion.destroy()  # Destruir la ventana si no se encuentra el ID
                 
         except Exception as e:
@@ -48,20 +48,20 @@ def ventana_modificacion(id_objeto):
 
         if nuevo_nombre and nueva_descripcion:
             try:
-                db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
+                db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
 
                 # Preparar la consulta de actualización
-                query = "UPDATE Enfermedad SET Nombre = %s, Descripcion = %s, Imagen = %s WHERE Id_Enfermedad = %s"
+                query = "UPDATE Deporte SET Nombre = %s, Descripcion = %s, Imagen = %s WHERE Id_Deporte = %s"
                 db_controlador.modificar_datos(query, (nuevo_nombre, nueva_descripcion, nueva_imagen, id_objeto))
 
                 # Mostrar mensaje de éxito
-                messagebox.showinfo("Éxito", "Enfermedad modificada exitosamente.")
+                messagebox.showinfo("Éxito", "Deporte modificado exitosamente.")
                 
                 # Cerrar ventana de modificación
                 ventana_modificacion.destroy()
 
             except Exception as e:
-                messagebox.showerror("Error", f"Error al modificar enfermedad: {e}")
+                messagebox.showerror("Error", f"Error al modificar deporte: {e}")
 
             finally:
                 db_controlador.cerrar_conexion()
@@ -136,27 +136,27 @@ def ventana_ingreso_id2():
         if id_objeto:
             # Comprobar si el ID existe antes de abrir la ventana de modificación
             try:
-                db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
-                query = "SELECT * FROM Enfermedad WHERE Id_Enfermedad = %s"
+                db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
+                query = "SELECT * FROM Deporte WHERE Id_Deporte = %s"
                 resultado = db_controlador.obtener_datos(query, (id_objeto,))
 
                 if resultado:
                     ventana_modificacion(id_objeto)  # Llama a la función modificar con el ID ingresado
                     ventana_ingreso.destroy()  # Destruye la ventana de ingreso de ID
                 else:
-                    messagebox.showwarning("Advertencia", "No se encontró una enfermedad con ese ID.")
+                    messagebox.showwarning("Advertencia", "No se encontró un deporte con ese ID.")
 
             except Exception as e:
-                messagebox.showerror("Error", f"Error al buscar enfermedad: {e}")
+                messagebox.showerror("Error", f"Error al buscar deporte: {e}")
 
             finally:
                 db_controlador.cerrar_conexion()
         else:
-            messagebox.showwarning("Advertencia", "Por favor, ingresa un ID de una enfermedad.")
+            messagebox.showwarning("Advertencia", "Por favor, ingresa un ID de un deporte.")
 
     # Crear ventana para ingresar el ID
     ventana_ingreso = tk.Toplevel()
-    ventana_ingreso.title("Buscar Enfermedad")
+    ventana_ingreso.title("Buscar Deporte")
     # ventana_ingreso.attributes('-topmost', True)  # Mantener en primer plano
 
     # Centrar la ventana
@@ -169,7 +169,7 @@ def ventana_ingreso_id2():
     ventana_ingreso.geometry(f'{window_width}x{window_height}+{x}+{y}')
     ventana_ingreso.focus_force()  # Forzar el foco en esta ventana
 
-    tk.Label(ventana_ingreso, text="ID de la Enfermedad:").pack()
+    tk.Label(ventana_ingreso, text="ID del Deporte:").pack()
     id_entry = tk.Entry(ventana_ingreso)  # Definimos id_entry aquí
     id_entry.pack(pady=5)
     id_entry.focus_set()  # Establecer el foco en el campo de ID

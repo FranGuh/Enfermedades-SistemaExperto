@@ -7,7 +7,7 @@ import os
 from agregar import menu_agregarObjeto
 from Usuario import mostrar_interfaz_usuario
 import shutil
-from Sintomas.agregarS import menu_agregarSintoma
+from Actividad.agregarA import menu_agregarActividad
 
 # Crear la ventana principal
 root = tk.Tk()
@@ -73,7 +73,7 @@ def pantalla_bienvenida():
     lbl_itz = ttk.Label(root, text="I.T.Z", font=("Arial", 28), background="#FFFFFF")
     lbl_itz.place(relx=0.5, rely=0.45, anchor="center")
 
-    lbl_sistema = ttk.Label(root, text="Sistema Experto para el Diagnóstico de Enfermedades", font=("Arial", 28), background="#FFFFFF")
+    lbl_sistema = ttk.Label(root, text="Sistema Experto para la recomendación de Deportes", font=("Arial", 28), background="#FFFFFF")
     lbl_sistema.place(relx=0.5, rely=0.5, anchor="center")
 
     # Botón Salir en la esquina inferior izquierda
@@ -182,11 +182,11 @@ def menu_experto():
     lbl_titulo.pack(pady=20)
 
 
-    btn_agregarObjeto = ttk.Button(root, text="Agregar Enfermedad", command=lambda: menu_agregarObjeto(root), image=flecha_icono, compound="left")
+    btn_agregarObjeto = ttk.Button(root, text="Agregar Deporte", command=lambda: menu_agregarObjeto(root), image=flecha_icono, compound="left")
     btn_agregarObjeto.place(x=600, y=150)
     btn_agregarObjeto.config(width=30, padding=(200, 30))
 
-    btn_agregarCaracteristicas = ttk.Button(root, text="Agregar Síntomas",  command=lambda: menu_agregarSintoma(root), image=flecha_icono, compound="left")
+    btn_agregarCaracteristicas = ttk.Button(root, text="Agregar Actividades",  command=lambda: menu_agregarActividad(root), image=flecha_icono, compound="left")
     btn_agregarCaracteristicas.place(x=600, y=350)
     btn_agregarCaracteristicas.config(width=30, padding=(200, 30))
 
@@ -291,7 +291,7 @@ def limpiar_pantalla():
 
 # Iniciar con la pantalla de bienvenida
 pantalla_bienvenida()
-mostrar_interfaz_usuario()
+#mostrar_interfaz_usuario()
 
 # Ejecutar el loop principal
 root.mainloop()

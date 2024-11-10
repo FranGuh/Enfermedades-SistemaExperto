@@ -1,0 +1,194 @@
+create database Conocimiento3;
+
+use Conocimiento3;
+
+
+-- Crear un nuevo usuario llamado 'nuevo_usuario' con la contraseña 'contraseña_segura'
+CREATE USER 'admin'@'localhost' IDENTIFIED BY '1234';
+
+-- Otorgar todos los privilegios CRUD sobre la base de datos 'mi_base_de_datos'
+GRANT ALL PRIVILEGES ON Conocimiento3.* TO 'admin'@'localhost';
+
+-- Para ver los privilegios otorgados
+SHOW GRANTS FOR 'admin'@'localhost';
+-- drop database Conocimiento3;
+
+-- drop table objeto;
+create table Deporte (
+	Id_Deporte int primary key auto_increment ,
+	Nombre varchar(90),
+    Descripcion varchar(360),
+    Imagen varchar(200) 
+);
+
+create table Actividad (
+	Id_Actividad int primary key auto_increment ,
+	Nombre varchar(90),
+    Imagen varchar(200) 
+);
+
+
+CREATE TABLE Relacion (
+	Id_Deporte INT,
+    Id_Actividad INT,
+    Probabilidad INT,
+	FOREIGN KEY (Id_Deporte) REFERENCES Deporte(Id_Deporte),
+    FOREIGN KEY (Id_Actividad) REFERENCES Actividad(Id_Actividad),
+    UNIQUE (Id_Actividad, Id_Deporte)
+);
+
+Drop table Relacion;
+
+select * from Deporte;
+select * from Actividad;
+select * from Relacion;
+
+Alter table Deporte add column Bandera boolean;
+Alter table Deporte add column Peso int;
+
+show Tables;
+update Deporte set Bandera=0 where Id_Deporte>=0;
+update Deporte set Peso=0 where Id_Deporte>=0;
+
+DELIMITER //
+
+CREATE TRIGGER set_default_values_before_insert
+BEFORE INSERT ON Deporte
+FOR EACH ROW
+BEGIN
+    -- Establecer Bandera a 0
+    SET NEW.Bandera = 0;
+
+    -- Establecer Peso a 0
+    SET NEW.Peso = 0;
+END;
+//
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER suma_peso_deporte
+AFTER INSERT ON Relacion
+FOR EACH ROW
+BEGIN
+    -- Actualizar el Peso del deporte sumando la probabilidad insertada
+    UPDATE Deporte 
+    SET Peso = Peso + NEW.Probabilidad
+    WHERE Id_Deporte = NEW.Id_Deporte;
+END;
+//
+
+DELIMITER ;
+
+
+
+
+DELIMITER //
+
+CREATE TRIGGER resta_peso_deporte
+AFTER DELETE ON Relacion
+FOR EACH ROW
+BEGIN
+    -- Actualizar el Peso del deporte restando la probabilidad eliminada
+    UPDATE Deporte 
+    SET Peso = Peso - OLD.Probabilidad
+    WHERE Id_Deporte = OLD.Id_Deporte;
+END;
+//
+
+DELIMITER ;
+
+select * from Actividad where Id_Actividad>=50;
+
+select Nombre from Actividad where Id_Actividad>=0;
+
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Sensibilidad a la luz', 'Imagenes\\Actividad\\sin_imagen.jpg');
+
+insert into Actividad(Nombre,Imagen)values('Dificultad para masticar','Imagenes\Actividad\sin_imagen.jpg'); 
+
+
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Entumecimiento', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Hipersensibilidad al frío', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Ruidos en las articulaciones', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Piel morada', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Infección en las uñas', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Pérdida del sentido del olfato', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Sabor metálico en la boca', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dolor de encías', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Sibilancias nocturnas', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dificultad para oír', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Cólicos menstruales', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Párpados hinchados', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Caída de las uñas', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Coloración amarillenta en los ojos', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dolor en la cadera', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dolor en la mandíbula', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Micción frecuente', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Incontinencia urinaria', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Pérdida del control del intestino', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Hinchazón de la lengua', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dolor en el talón', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dolor en los dedos de los pies', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Ronquidos', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Piel agrietada', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Presión en los oídos', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Cambios de humor', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Somnolencia', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Desorientación', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Aumento de la frecuencia cardíaca', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dolor en las muñecas', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dolor en los tobillos', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dolor de senos nasales', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Úlceras bucales', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Babeo excesivo', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Cicatrización anormal', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Moretones sin causa', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Debilidad en las manos', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Palidez extrema', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Escamas en el cuero cabelludo', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Falta de coordinación motora', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Respiración ruidosa', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Sensación de deshidratación', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Temblores en los párpados', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dificultad para mantener la postura', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Calor en las articulaciones', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Dolor lumbar nocturno', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Picores en el cuero cabelludo', 'Imagenes\\Actividad\\sin_imagen.jpg');
+INSERT INTO Actividad(Nombre, Imagen) VALUES ('Sensación de desmayo', 'Imagenes\\Actividad\\sin_imagen.jpg');
+
+
+
+select nombre from Deporte where Id_Deporte>10;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Consultas
+use Conocimiento3;
+Select * from Deporte where Id_Deporte>23;
+select * from Relacion where Id_Deporte>23;
+select * from Actividad;
+alter table Relacion add column bandera boolean;
+update relacion set bandera=0 where Id_Deporte >= 0;
+

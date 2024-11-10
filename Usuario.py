@@ -12,13 +12,13 @@ class UsuarioInterfaz:
         title_label = tk.Label(root, text="Interfaz Usuario", font=("Helvetica", 16))
         title_label.pack(pady=20)
 
-        # Botón para "Búsqueda por síntomas"
-        btn_sintomas = tk.Button(root, text="Búsqueda por síntomas", command=self.abrir_busqueda_sintomas)
-        btn_sintomas.pack(pady=10)
+        # Botón para "Búsqueda por actividades"
+        btn_actividades = tk.Button(root, text="Búsqueda por actividad", command=self.abrir_busqueda_actividades)
+        btn_actividades.pack(pady=10)
 
-        # Botón para "Búsqueda por enfermedad"
-        btn_enfermedad = tk.Button(root, text="Búsqueda por enfermedad", command=self.busqueda_enfermedad)
-        btn_enfermedad.pack(pady=10)
+        # Botón para "Búsqueda por deporte"
+        btn_deporte = tk.Button(root, text="Búsqueda por deporte", command=self.busqueda_deporte)
+        btn_deporte.pack(pady=10)
 
         # Botón para "Regresar"
         btn_regresar = tk.Button(root, text="Regresar", command=self.root.destroy)
@@ -36,14 +36,14 @@ class UsuarioInterfaz:
         # Establecer tamaño y posición de la ventana
         self.root.geometry(f"{width}x{height}+{x}+{y}")
 
-    def abrir_busqueda_sintomas(self):
-        ejecutar_BusquedaSintoma()
+    def abrir_busqueda_actividades(self):
+        ejecutar_BusquedaActividad()
 
-    def busqueda_enfermedad(self):
+    def busqueda_deporte(self):
         messagebox.showinfo("Funcionalidad no implementada", "Esta función aún no está disponible.")
 
-def ejecutar_BusquedaSintoma():
-    subprocess.run(["python", "BusquedaSintoma.py"])
+def ejecutar_BusquedaActividad():
+    subprocess.run(["python", "BusquedaActividad.py"])
 
 def mostrar_interfaz_usuario():
     root = tk.Tk()
