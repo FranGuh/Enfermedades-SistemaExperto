@@ -7,7 +7,7 @@ from controlador.controlador import ControladorDB  # Asegúrate de tener el cont
 def ventana_modificacion(id_objeto):
     def cargar_datos():
         try:
-            db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
+            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
 
             # Consulta para obtener los datos del objeto
             query = "SELECT Nombre, Descripcion, Imagen FROM Deporte WHERE Id_Deporte = %s"

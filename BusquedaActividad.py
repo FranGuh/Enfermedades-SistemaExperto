@@ -12,8 +12,8 @@ class BusquedaActividad:
         # Conectar a la base de datos MySQL
         self.conn = mysql.connector.connect(
             host="localhost",        # Cambia al host de tu servidor
-            user="root",             # Cambia al usuario de tu base de datos
-            password="",         # Cambia a la contraseña de tu base de datos
+            user="roger",             # Cambia al usuario de tu base de datos
+            password="1234",         # Cambia a la contraseña de tu base de datos
             database="Conocimiento3"  # Cambia al nombre de tu base de datos
         )
         self.cursor = self.conn.cursor()

@@ -13,8 +13,8 @@ class CuadroRelacion:
         # Conexión a la base de datos
         self.conn = mysql.connector.connect(
             host="localhost",
-            user="root",
-            password="",
+            user="roger",
+            password="1234",
             database="Conocimiento3"
         )
         self.cursor = self.conn.cursor()

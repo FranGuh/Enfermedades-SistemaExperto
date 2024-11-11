@@ -76,7 +76,7 @@ def menu_agregarObjeto(master):
         label_imagen.pack()
 
         try:
-            db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
+            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
             query = "SELECT Id_Deporte, Nombre, Descripcion, Peso, Imagen FROM Deporte"
             objetos = db_controlador.obtener_datos(query)
 
