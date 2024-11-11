@@ -15,22 +15,22 @@ def eliminar_objeto(id_objeto):
         db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
 
         # Consulta para obtener el nombre del objeto por ID
-        query = "SELECT Nombre FROM Deporte WHERE Id_Deporte = %s"
+        query = "SELECT Nombre FROM Actividad WHERE Id_Actividad = %s"
         resultado = db_controlador.obtener_datos(query, (id_objeto,))
 
         if resultado:
             nombre_objeto = resultado[0][0]  # Nombre del objeto
             # Pregunta si desea eliminar el objeto
-            if messagebox.askyesno("Confirmar Eliminación", f"¿Deseas eliminar el deporte '{nombre_objeto}'?"):
+            if messagebox.askyesno("Confirmar Eliminación", f"¿Deseas eliminar la actividad '{nombre_objeto}'?"):
                 # Ejecutar eliminación
-                query_delete = "DELETE FROM Deporte WHERE Id_Deporte = %s"
+                query_delete = "DELETE FROM Actividad WHERE Id_Actividad = %s"
                 db_controlador.modificar_datos(query_delete, (id_objeto,))
-                messagebox.showinfo("Éxito", "Deporte eliminado exitosamente.")
+                messagebox.showinfo("Éxito", "Actividad eliminada exitosamente.")
         else:
-            messagebox.showinfo("Advertencia", "No se encontró ningún Deporte con ese ID.")
+            messagebox.showinfo("Advertencia", "No se encontró ninguna Actividad con ese ID.")
 
     except Exception as e:
-        messagebox.showinfo("Error", f"Error al eliminar Deporte: {e}")
+        messagebox.showinfo("Error", f"Error al eliminar la Actividad: {e}")
 
     finally:
         db_controlador.cerrar_conexion()
@@ -42,17 +42,17 @@ def ventana_bajas():
             eliminar_objeto(id_objeto)  # Llama a la función para eliminar el objeto
             ventana_bajas.destroy()  # Destruye la ventana de bajas
         else:
-            messagebox.showinfo("Advertencia", "Por favor, ingresa un ID de Deporte.")
+            messagebox.showinfo("Advertencia", "Por favor, ingresa un ID de la Actividad.")
 
     # Crear ventana para ingresar el ID
     ventana_bajas = tk.Toplevel()
-    ventana_bajas.title("Eliminar Deporte")
+    ventana_bajas.title("Eliminar Actividad")
 
-    tk.Label(ventana_bajas, text="ID de Deporte a Eliminar:").pack()
+    tk.Label(ventana_bajas, text="ID de la Actividad a Eliminar:").pack()
     id_entry = tk.Entry(ventana_bajas)  # Definimos id_entry aquí
     id_entry.pack(pady=5)
 
-    buscar_btn = tk.Button(ventana_bajas, text="Eliminar Deporte", command=obtener_id_y_eliminar)
+    buscar_btn = tk.Button(ventana_bajas, text="Eliminar Actividad", command=obtener_id_y_eliminar)
     buscar_btn.pack(pady=5)
 
     # Centrar la ventana

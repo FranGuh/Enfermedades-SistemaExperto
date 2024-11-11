@@ -3,20 +3,20 @@ from tkinter import ttk, messagebox, filedialog, scrolledtext
 from PIL import Image, ImageTk
 import os
 import shutil
-from modificar import ventana_ingreso_id
-from eliminar import ventana_bajas
-from consultar import ventana_ingreso_id2
+import Imagenes
+from Actividad.modificar import ventana_ingreso_id
+from Actividad.eliminar import ventana_bajas
+from Actividad.consultar import ventana_ingreso_id2
 from controlador.controlador import ControladorDB  # Importar el controlador de base de datos
 
 
 
-
-def menu_agregarObjeto(master):
+def menu_agregarActividad(master):
     global img_label  
     global carpeta_imagenes  
-    carpeta_imagenes = "Imagenes\Deporte" ################ r"Imagenes\Deporte"?
+    carpeta_imagenes = "Imagenes\Actividad"
     os.makedirs(carpeta_imagenes, exist_ok=True)  # Crear la carpeta si no existe
-
+    
 
     def volverPantalla():
         ventana.withdraw()
@@ -24,26 +24,26 @@ def menu_agregarObjeto(master):
         
     def agregar_objeto():
         nombre = nombre_entry.get()
-        descripcion = descripcion_text.get("1.0", tk.END).strip()
+        #descripcion = descripcion_text.get("1.0", tk.END).strip()
         imagen = getattr(img_label, 'image_path', None)  # Asegúrate de que esto tenga la ruta correcta
 
-        if nombre and descripcion and imagen:
+        if nombre and imagen:
             try:
                 # Establecer la conexión a la base de datos
                 db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
 
                 # Preparar la consulta de inserción
-                query = "INSERT INTO Deporte (Nombre, Descripcion, Imagen) VALUES (%s, %s, %s)"
-                db_controlador.insertar_datos(query, (nombre, descripcion, imagen))
+                query = "INSERT INTO Actividad (Nombre, Imagen) VALUES (%s, %s)"
+                db_controlador.insertar_datos(query, (nombre, imagen))
 
                 # Mostrar un mensaje de éxito
-                messagebox.showinfo("Éxito", "Deporte agregado a la base de datos.")
+                messagebox.showinfo("Éxito", "Actividad agregada a la base de datos.")
                 
                 # Volver a la pantalla anterior
                 volverPantalla()
 
             except Exception as e:
-                messagebox.showerror("Error", f"No se pudo agregar Deporte a la base de datos: {e}")
+                messagebox.showerror("Error", f"No se pudo agregar la actividad a la base de datos: {e}")
                 volverPantalla()
 
             finally:
@@ -54,57 +54,35 @@ def menu_agregarObjeto(master):
             messagebox.showwarning("Advertencia", "Por favor, completa todos los campos.")
             volverPantalla()
 
+
     def consultar_datos():
         ventana_consulta = tk.Toplevel(ventana)
-        ventana_consulta.title("Consulta de Deporte")
+        ventana_consulta.title("Consulta de Actividades")
         ventana.geometry(f'{window_width}x{window_height}+{x}+{y}') 
 
-        # Treeview setup
-        tree = ttk.Treeview(ventana_consulta, columns=("Id_Deporte", "Nombre", "Descripcion", "Peso"), show='headings')
-        tree.heading("Id_Deporte", text="Id_Deporte")
+        tree = ttk.Treeview(ventana_consulta, columns=("Id_Actividad","Nombre", "Imagen"), show='headings')
+        tree.heading("Id_Actividad", text="Id_Actividad")
         tree.heading("Nombre", text="Nombre")
-        tree.heading("Descripcion", text="Descripción")
-        tree.heading("Peso", text="Suma")
+        #tree.heading("Descripcion", text="Descripción")
+        tree.heading("Imagen", text="Imagen")
         tree.pack(fill=tk.BOTH, expand=True)
 
         scrollbar = ttk.Scrollbar(ventana_consulta, orient="vertical", command=tree.yview)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         tree.configure(yscrollcommand=scrollbar.set)
 
-        # Label to display image
-        label_imagen = tk.Label(ventana_consulta)
-        label_imagen.pack()
-
         try:
             db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
-            query = "SELECT Id_Deporte, Nombre, Descripcion, Peso, Imagen FROM Deporte"
+            query = "SELECT Id_Actividad,Nombre, Imagen FROM Actividad"
             objetos = db_controlador.obtener_datos(query)
 
             for objeto in objetos:
-                tree.insert('', tk.END, values=objeto[:-1])  # insert without the image path
-
-            # Function to display image on selection
-            def mostrar_imagen(event):
-                selected_item = tree.selection()
-                if selected_item:
-                    item = tree.item(selected_item)
-                    imagen_path = objetos[tree.index(selected_item[0])][4]  # Get image path
-                    try:
-                        img = Image.open(imagen_path)
-                        img = img.resize((200, 200), Image.LANCZOS)
-                        img_tk = ImageTk.PhotoImage(img)
-                        label_imagen.config(image=img_tk)
-                        label_imagen.image = img_tk
-                    except Exception as e:
-                        messagebox.showerror("Error", f"No se pudo cargar la imagen: {e}")
-
-            tree.bind("<<TreeviewSelect>>", mostrar_imagen)
+                tree.insert('', tk.END, values=objeto)
 
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo realizar la consulta: {e}")
         finally:
             db_controlador.cerrar_conexion()
-
             
     def cargar_imagen():
         file_path = filedialog.askopenfilename(
@@ -147,33 +125,33 @@ def menu_agregarObjeto(master):
 
     # Crear la ventana principal
     ventana = tk.Toplevel(master)
-    ventana.title("Agregar Deporte")
-
-    #ICONOS
+    ventana.title("Agregar Actividad")
+    
+        #ICONOS
     #flecha_icono = Image.open("Imagenes/Iconos/flecha.png")   
-    #flecha_icono = flecha_icono.resize((5, 5), Image.Resampling.LANCZOS)
+    #flecha_icono = flecha_icono.resize((20, 20), Image.Resampling.LANCZOS)
     #flecha_icono = ImageTk.PhotoImage(flecha_icono)
 
     #elimina
     #baja_icono = Image.open("Imagenes/Iconos/baja.png")   
-    #baja_icono = baja_icono.resize((5, 5), Image.Resampling.LANCZOS)
+    #baja_icono = baja_icono.resize((20, 20), Image.Resampling.LANCZOS)
     #baja_icono = ImageTk.PhotoImage(baja_icono)
 
     #insertar
     #insert_icono = Image.open("Imagenes/Iconos/insertar.jpg")   
-    #insert_icono = insert_icono.resize((5, 5), Image.Resampling.LANCZOS)
+    #insert_icono = insert_icono.resize((20, 20), Image.Resampling.LANCZOS)
     #insert_icono = ImageTk.PhotoImage(insert_icono)
 
     #consulta
     #consult_icono = Image.open("Imagenes/Iconos/consulta.png")   
-    #consult_icono = consult_icono.resize((5, 5), Image.Resampling.LANCZOS)
+    #consult_icono = consult_icono.resize((20, 20), Image.Resampling.LANCZOS)
     #consult_icono = ImageTk.PhotoImage(consult_icono)
 
-    #consulta
+    #modificar
     #modifi_icono = Image.open("Imagenes/Iconos/modificar.png")   
-    #modifi_icono = modifi_icono.resize((5, 5), Image.Resampling.LANCZOS)
+    #modifi_icono = modifi_icono.resize((20, 20), Image.Resampling.LANCZOS)
     #modifi_icono = ImageTk.PhotoImage(modifi_icono)
-    
+
  # Obtener el tamaño de la pantalla
     screen_width = ventana.winfo_screenwidth()
     screen_height = ventana.winfo_screenheight()
@@ -189,7 +167,7 @@ def menu_agregarObjeto(master):
     ventana.geometry(f'{window_width}x{window_height}+{x}+{y}') 
     
     # Título centrado
-    titulo = tk.Label(ventana, text="Agregar Deporte", font=("Arial", 16))
+    titulo = tk.Label(ventana, text="Agregar Actividad", font=("Arial", 16))
     titulo.pack(pady=10)
 
     # Crear el marco principal
@@ -210,9 +188,9 @@ def menu_agregarObjeto(master):
     nombre_entry.pack(pady=5)
 
     # Etiqueta y área de texto para Descripción
-    tk.Label(izquierda_frame, text="Descripción:").pack(anchor=tk.W)
-    descripcion_text = scrolledtext.ScrolledText(izquierda_frame, width=30, height=10)
-    descripcion_text.pack(pady=5)
+   # tk.Label(izquierda_frame, text="Descripción:").pack(anchor=tk.W)
+    #descripcion_text = scrolledtext.ScrolledText(izquierda_frame, width=30, height=10)
+    #descripcion_text.pack(pady=5)
 
     # Botón para cargar imagen
     cargar_imagen_btn = tk.Button(derecha_frame, text="Cargar Imagen", command=cargar_imagen)
@@ -235,15 +213,15 @@ def menu_agregarObjeto(master):
     altas_btn.pack(side=tk.LEFT, padx=10)
 
     # Botón de Bajas
-    bajas_btn = tk.Button(botones_frame, text="Bajas" , command=ventana_bajas)
+    bajas_btn = tk.Button(botones_frame, text="Bajas", command=ventana_bajas)
     bajas_btn.pack(side=tk.LEFT, padx=10)
 
     # Botón de Modificaciones
-    modificaciones_btn = tk.Button(botones_frame, text="Modificaciones" , command=ventana_ingreso_id)
+    modificaciones_btn = tk.Button(botones_frame, text="Modificaciones", command=ventana_ingreso_id)
     modificaciones_btn.pack(side=tk.LEFT, padx=10)
     
      # Botón de Consultar
-    consultar_btn = tk.Button(botones_frame, text="Consultar General" , command=consultar_datos)
+    consultar_btn = tk.Button(botones_frame, text="Consultar General",command=consultar_datos)
     consultar_btn.pack(side=tk.LEFT, padx=10)
     
      # Botón de Consultar
@@ -267,28 +245,28 @@ def menu_agregarObjeto(master):
             db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
 
             # Consulta para obtener todos los objetos
-            query = "SELECT Nombre, Descripcion, Imagen FROM Deporte"
+            query = "SELECT Nombre, Imagen FROM Actividad"
             objetos = db_controlador.obtener_datos(query)  # Supone que este método devuelve una lista de tuplas
 
             if objetos:
                 mostrar_objeto(current_index)  # Muestra el primer objeto
 
         except Exception as e:
-            messagebox.showerror("Error", f"No se pudieron cargar los deportes: {e}")
+            messagebox.showerror("Error", f"No se pudieron cargar las actividades: {e}")
         finally:
             db_controlador.cerrar_conexion()
 
     def mostrar_objeto(index):
         if 0 <= index < len(objetos):
-            nombre, descripcion, imagen = objetos[index]
+            nombre, imagen = objetos[index]
 
             nombre_entry.config(state='normal')  # Habilitar para poder mostrar
             nombre_entry.delete(0, tk.END)
             nombre_entry.insert(0, nombre)
 
-            descripcion_text.config(state='normal')  # Habilitar para poder mostrar
-            descripcion_text.delete("1.0", tk.END)
-            descripcion_text.insert("1.0", descripcion)
+            #descripcion_text.config(state='normal')  # Habilitar para poder mostrar
+            #descripcion_text.delete("1.0", tk.END)
+            #descripcion_text.insert("1.0", descripcion)
 
             # Cargar imagen
             cargar_imagen(imagen)
