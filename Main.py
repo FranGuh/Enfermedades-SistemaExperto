@@ -11,7 +11,7 @@ from Actividad.agregarA import menu_agregarActividad
 
 # Crear la ventana principal
 root = tk.Tk()
-root.title("Sistema Experto Genérico")
+root.title("Sistema Experto de actividades deportivas")
 root.geometry("1920x1080")  # Ajustar la resolución de la ventana
 
 # Cargar la imagen de la flecha
@@ -109,7 +109,7 @@ def ventana_interfaces():
     opcion = tk.IntVar()
 
     # Radiobutton para seleccionar "Experto" (opción 1)
-     # Necesito agregar una imagen pequeña al lado izquierdo de la opcion
+    # Necesito agregar una imagen pequeña al lado izquierdo de la opcion
     rbtn_experto = ttk.Radiobutton(ventana, text="Experto", variable=opcion, value=1)
     rbtn_experto.pack(pady=10)
 
@@ -173,7 +173,7 @@ def ejecutar_relacion():
 def menu_experto():
     limpiar_pantalla()
 
-   
+
     agregar_imagen_bienvenida("Imagenes/Iconos/imagen.jpg", root, "yo")
     agregar_imagen_bienvenida("Imagenes/Iconos/imagen.jpg", root, "yo1")
     agregar_imagen_bienvenida("Imagenes/Iconos/imagen.jpg", root, "yo2")
