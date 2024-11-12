@@ -7,10 +7,10 @@ from controlador.controlador import ControladorDB  # Asegúrate de tener el cont
 def ventana_modificacion(id_objeto):
     def cargar_datos():
         try:
-            db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
+            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
 
             # Consulta para obtener los datos del objeto
-            query = "SELECT Nombre, Imagen FROM Sintomas WHERE Id_Sintoma = %s"
+            query = "SELECT Nombre, Imagen FROM Actividad WHERE Id_Actividad = %s"
             resultado = db_controlador.obtener_datos(query, (id_objeto,))
 
             if resultado:
@@ -32,7 +32,7 @@ def ventana_modificacion(id_objeto):
                 else:
                     messagebox.showwarning("Advertencia", "La imagen no se encontró.")
             else:
-                messagebox.showwarning("Advertencia", "No se encontró ningún Sintoma con ese ID.")
+                messagebox.showwarning("Advertencia", "No se encontró ningún Actividad con ese ID.")
                 ventana_modificacion.destroy()  # Destruir la ventana si no se encuentra el ID
                 
         except Exception as e:
@@ -48,20 +48,20 @@ def ventana_modificacion(id_objeto):
 
         if nuevo_nombre:
             try:
-                db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
+                db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
 
                 # Preparar la consulta de actualización
-                query = "UPDATE Sintomas SET Nombre = %s, Imagen = %s WHERE Id_Sintoma = %s"
+                query = "UPDATE Actividad SET Nombre = %s, Imagen = %s WHERE Id_Actividad = %s"
                 db_controlador.modificar_datos(query, (nuevo_nombre, nueva_imagen, id_objeto))
 
                 # Mostrar mensaje de éxito
-                messagebox.showinfo("Éxito", "Sintoma modificado exitosamente.")
+                messagebox.showinfo("Éxito", "Actividad modificado exitosamente.")
                 
                 # Cerrar ventana de modificación
                 ventana_modificacion.destroy()
 
             except Exception as e:
-                messagebox.showerror("Error", f"Error al modificar el Sintoma: {e}")
+                messagebox.showerror("Error", f"Error al modificar el Actividad: {e}")
 
             finally:
                 db_controlador.cerrar_conexion()
@@ -91,7 +91,7 @@ def ventana_modificacion(id_objeto):
 
     # Crear ventana para modificación
     ventana_modificacion = tk.Toplevel()
-    ventana_modificacion.title("Modificar Sintoma")
+    ventana_modificacion.title("Modificar Actividad")
     ventana_modificacion.attributes('-topmost', False)  # Mantener en primer plano
 
     # Centrar la ventana
@@ -136,27 +136,27 @@ def ventana_ingreso_id():
         if id_objeto:
             # Comprobar si el ID existe antes de abrir la ventana de modificación
             try:
-                db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
-                query = "SELECT * FROM Sintomas WHERE Id_Sintoma = %s"
+                db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
+                query = "SELECT * FROM Actividad WHERE Id_Actividad = %s"
                 resultado = db_controlador.obtener_datos(query, (id_objeto,))
 
                 if resultado:
                     ventana_modificacion(id_objeto)  # Llama a la función modificar con el ID ingresado
                     ventana_ingreso.destroy()  # Destruye la ventana de ingreso de ID
                 else:
-                    messagebox.showwarning("Advertencia", "No se encontró un sintoma con ese ID.")
+                    messagebox.showwarning("Advertencia", "No se encontró un Actividad con ese ID.")
 
             except Exception as e:
-                messagebox.showerror("Error", f"Error al buscar el sintoma: {e}")
+                messagebox.showerror("Error", f"Error al buscar el Actividad: {e}")
 
             finally:
                 db_controlador.cerrar_conexion()
         else:
-            messagebox.showwarning("Advertencia", "Por favor, ingresa un ID de Sintoma.")
+            messagebox.showwarning("Advertencia", "Por favor, ingresa un ID de Actividad.")
 
     # Crear ventana para ingresar el ID
     ventana_ingreso = tk.Toplevel()
-    ventana_ingreso.title("Buscar Sintoma")
+    ventana_ingreso.title("Buscar Actividad")
    # ventana_ingreso.attributes('-topmost', True)  # Mantener en primer plano
 
     # Centrar la ventana
@@ -169,10 +169,10 @@ def ventana_ingreso_id():
     ventana_ingreso.geometry(f'{window_width}x{window_height}+{x}+{y}')
     ventana_ingreso.focus_force()  # Forzar el foco en esta ventana
 
-    tk.Label(ventana_ingreso, text="ID de la Sintoma:").pack()
+    tk.Label(ventana_ingreso, text="ID de la Actividad:").pack()
     id_entry = tk.Entry(ventana_ingreso)  # Definimos id_entry aquí
     id_entry.pack(pady=5)
     id_entry.focus_set()  # Establecer el foco en el campo de ID
 
-    buscar_btn = tk.Button(ventana_ingreso, text="Modificar Sintoma", command=obtener_id_y_modificar)
+    buscar_btn = tk.Button(ventana_ingreso, text="Modificar Actividad", command=obtener_id_y_modificar)
     buscar_btn.pack(pady=5)
