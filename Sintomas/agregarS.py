@@ -4,17 +4,17 @@ from PIL import Image, ImageTk
 import os
 import shutil
 import Imagenes
-from Sintomas.modificar import ventana_ingreso_id
-from Sintomas.eliminar import ventana_bajas
-from Sintomas.consultar import ventana_ingreso_id2
+from Actividads.modificar import ventana_ingreso_id
+from Actividads.eliminar import ventana_bajas
+from Actividads.consultar import ventana_ingreso_id2
 from controlador.controlador import ControladorDB  # Importar el controlador de base de datos
 
 
 
-def menu_agregarSintoma(master):
+def menu_agregarActividad(master):
     global img_label  
     global carpeta_imagenes  
-    carpeta_imagenes = r"Imagenes\Sintomas"
+    carpeta_imagenes = r"Imagenes\Actividad"
     os.makedirs(carpeta_imagenes, exist_ok=True)  # Crear la carpeta si no existe
     
 
@@ -30,20 +30,20 @@ def menu_agregarSintoma(master):
         if nombre and imagen:
             try:
                 # Establecer la conexión a la base de datos
-                db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
+                db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
 
                 # Preparar la consulta de inserción
-                query = "INSERT INTO Sintomas (Nombre, Imagen) VALUES (%s, %s)"
+                query = "INSERT INTO Actividads (Nombre, Imagen) VALUES (%s, %s)"
                 db_controlador.insertar_datos(query, (nombre, imagen))
 
                 # Mostrar un mensaje de éxito
-                messagebox.showinfo("Éxito", "Sintomas agregado a la base de datos.")
+                messagebox.showinfo("Éxito", "Actividads agregado a la base de datos.")
                 
                 # Volver a la pantalla anterior
                 volverPantalla()
 
             except Exception as e:
-                messagebox.showerror("Error", f"No se pudo agregar el Sintomas a la base de datos: {e}")
+                messagebox.showerror("Error", f"No se pudo agregar el Actividads a la base de datos: {e}")
                 volverPantalla()
 
             finally:
@@ -57,11 +57,11 @@ def menu_agregarSintoma(master):
 
     def consultar_datos():
         ventana_consulta = tk.Toplevel(ventana)
-        ventana_consulta.title("Consulta de Sintomas")
+        ventana_consulta.title("Consulta de Actividads")
         ventana.geometry(f'{window_width}x{window_height}+{x}+{y}') 
 
-        tree = ttk.Treeview(ventana_consulta, columns=("Id_Sintoma","Nombre", "Imagen"), show='headings')
-        tree.heading("Id_Sintoma", text="Id_Sintoma")
+        tree = ttk.Treeview(ventana_consulta, columns=("Id_Actividad","Nombre", "Imagen"), show='headings')
+        tree.heading("Id_Actividad", text="Id_Actividad")
         tree.heading("Nombre", text="Nombre")
         #tree.heading("Descripcion", text="Descripción")
         tree.heading("Imagen", text="Imagen")
@@ -72,8 +72,8 @@ def menu_agregarSintoma(master):
         tree.configure(yscrollcommand=scrollbar.set)
 
         try:
-            db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
-            query = "SELECT Id_Sintoma,Nombre, Imagen FROM Sintomas"
+            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
+            query = "SELECT Id_Actividad,Nombre, Imagen FROM Actividads"
             objetos = db_controlador.obtener_datos(query)
 
             for objeto in objetos:
@@ -125,7 +125,7 @@ def menu_agregarSintoma(master):
 
     # Crear la ventana principal
     ventana = tk.Toplevel(master)
-    ventana.title("Agregar Sintoma")
+    ventana.title("Agregar Actividad")
     
         #ICONOS
     #flecha_icono = Image.open("Imagenes/Iconos/flecha.png")   
@@ -167,7 +167,7 @@ def menu_agregarSintoma(master):
     ventana.geometry(f'{window_width}x{window_height}+{x}+{y}') 
     
     # Título centrado
-    titulo = tk.Label(ventana, text="Agregar Sintoma", font=("Arial", 16))
+    titulo = tk.Label(ventana, text="Agregar Actividad", font=("Arial", 16))
     titulo.pack(pady=10)
 
     # Crear el marco principal
@@ -242,17 +242,17 @@ def menu_agregarSintoma(master):
         global objetos
         try:
             # Establecer la conexión a la base de datos
-            db_controlador = ControladorDB('localhost', 'root', 'root', 'Conocimiento')
+            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
 
             # Consulta para obtener todos los objetos
-            query = "SELECT Nombre, Imagen FROM Sintomas"
+            query = "SELECT Nombre, Imagen FROM Actividads"
             objetos = db_controlador.obtener_datos(query)  # Supone que este método devuelve una lista de tuplas
 
             if objetos:
                 mostrar_objeto(current_index)  # Muestra el primer objeto
 
         except Exception as e:
-            messagebox.showerror("Error", f"No se pudo cargar los Sintomas: {e}")
+            messagebox.showerror("Error", f"No se pudo cargar los Actividads: {e}")
         finally:
             db_controlador.cerrar_conexion()
 

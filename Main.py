@@ -11,7 +11,7 @@ from Actividad.agregarA import menu_agregarActividad
 
 # Crear la ventana principal
 root = tk.Tk()
-root.title("Sistema Experto Genérico")
+root.title("Sistema Experto de actividades deportivas")
 root.geometry("1920x1080")  # Ajustar la resolución de la ventana
 
 # Cargar la imagen de la flecha
@@ -109,7 +109,7 @@ def ventana_interfaces():
     opcion = tk.IntVar()
 
     # Radiobutton para seleccionar "Experto" (opción 1)
-     # Necesito agregar una imagen pequeña al lado izquierdo de la opcion
+    # Necesito agregar una imagen pequeña al lado izquierdo de la opcion
     rbtn_experto = ttk.Radiobutton(ventana, text="Experto", variable=opcion, value=1)
     rbtn_experto.pack(pady=10)
 
@@ -173,7 +173,7 @@ def ejecutar_relacion():
 def menu_experto():
     limpiar_pantalla()
 
-   
+
     agregar_imagen_bienvenida("Imagenes/Iconos/imagen.jpg", root, "yo")
     agregar_imagen_bienvenida("Imagenes/Iconos/imagen.jpg", root, "yo1")
     agregar_imagen_bienvenida("Imagenes/Iconos/imagen.jpg", root, "yo2")
@@ -244,7 +244,7 @@ def pantalla_autores():
     #agregar_imagen_bienvenida("C:/Users/tavo_/OneDrive/Documentos/Trabajos IA/10Septiembre/Imagenes/yo.jpg", root, "yo")
     #agregar_imagen_bienvenida("C:/Users/tavo_/OneDrive/Documentos/Trabajos IA/10Septiembre/Imagenes/black.jpg", root, "yo1")
     agregar_imagen_bienvenida("Imagenes/yo.jpg", root, "yo")
-    agregar_imagen_bienvenida("Imagenes/black.jpg", root, "yo1")
+    agregar_imagen_bienvenida("Imagenes/rog.jpg", root, "yo1")
 
     lbl_autores = ttk.Label(root, text="Autores del sistema", font=("Arial", 24))
     lbl_autores.pack(pady=20)
@@ -255,7 +255,7 @@ def pantalla_autores():
     lbl_autores_texto.pack(pady=5)
 
     autores_texto1 = "Datos personales \n"
-    autores_texto1 += "Nombre: Blacky Salgado Andrade.\nDirección: U HAB. Jose Maria Morelos y Pavon, Morelos Jojutla.\nTeléfono: 7874933706\nE-mail: elmasperron@gmail.com"
+    autores_texto1 += "Nombre: Rogelio Olivos Marcelino.\nDirección: Xochitepec.\nTeléfono: 7874933706\nE-mail: elmasperron@gmail.com"
     lbl_autores_texto1 = ttk.Label(root, text=autores_texto1, font=("Arial", 18))
     lbl_autores_texto1.pack(pady=5)
 

@@ -30,7 +30,7 @@ def menu_agregarObjeto(master):
         if nombre and descripcion and imagen:
             try:
                 # Establecer la conexión a la base de datos
-                db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
+                db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
 
                 # Preparar la consulta de inserción
                 query = "INSERT INTO Deporte (Nombre, Descripcion, Imagen) VALUES (%s, %s, %s)"
@@ -76,7 +76,7 @@ def menu_agregarObjeto(master):
         label_imagen.pack()
 
         try:
-            db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
+            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
             query = "SELECT Id_Deporte, Nombre, Descripcion, Peso, Imagen FROM Deporte"
             objetos = db_controlador.obtener_datos(query)
 
@@ -264,7 +264,7 @@ def menu_agregarObjeto(master):
         global objetos
         try:
             # Establecer la conexión a la base de datos
-            db_controlador = ControladorDB('localhost', 'root', '', 'Conocimiento3')
+            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
 
             # Consulta para obtener todos los objetos
             query = "SELECT Nombre, Descripcion, Imagen FROM Deporte"
