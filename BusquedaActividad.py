@@ -153,7 +153,7 @@ class BusquedaActividad:
             actividades_texto = ", ".join(actividades_nombres)
 
             # Generar mensaje con nombres de deportes y cálculo de porcentajes
-            mensaje = "Los 5 deportes más probables (de mayor a menor) son:\n\n"
+            mensaje = "Los 5 deportes más probables son:\n\n"
             for deporte_id, probabilidad_acumulada in resultados:
                 # Obtener datos del deporte desde la tabla Deporte
                 deporte_query = "SELECT nombre, peso FROM Deporte WHERE Id_Deporte = %s"

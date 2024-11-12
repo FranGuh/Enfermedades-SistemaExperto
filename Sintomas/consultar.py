@@ -7,7 +7,7 @@ from controlador.controlador import ControladorDB  # Asegúrate de tener el cont
 def ventana_modificacion(id_objeto):
     def cargar_datos():
         try:
-            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
+            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
 
             # Consulta para obtener los datos del objeto
             query = "SELECT Nombre, Imagen FROM Actividad WHERE Id_Actividad = %s"
@@ -48,7 +48,7 @@ def ventana_modificacion(id_objeto):
 
         if nuevo_nombre:
             try:
-                db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
+                db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
 
                 # Preparar la consulta de actualización
                 query = "UPDATE Actividad SET Nombre = %s, Imagen = %s WHERE Id_Actividad = %s"
@@ -136,7 +136,7 @@ def ventana_ingreso_id2():
         if id_objeto:
             # Comprobar si el ID existe antes de abrir la ventana de modificación
             try:
-                db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
+                db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
                 query = "SELECT * FROM Actividad WHERE Id_Actividad = %s"
                 resultado = db_controlador.obtener_datos(query, (id_objeto,))
 

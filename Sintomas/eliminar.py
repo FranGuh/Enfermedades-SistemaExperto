@@ -12,7 +12,7 @@ def centrar_ventana(ventana, ancho=300, alto=200):
 
 def eliminar_objeto(id_objeto):
     try:
-        db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
+        db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
 
         # Consulta para obtener el nombre del objeto por ID
         query = "SELECT Nombre FROM Actividad WHERE Id_Actividad = %s"
