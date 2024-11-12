@@ -88,7 +88,13 @@ class BusquedaActividad:
                 self.image_label.configure(image=photo)
                 self.image_label.image = photo
             except Exception as e:
-                messagebox.showerror("Error", f"No se pudo cargar la imagen: {e}")
+                # no hay imagen
+                # messagebox.showerror("Error", f"No se pudo cargar la imagen: {e}")
+                image = Image.open("Imagenes\Enfermedad\sin_imagen.jpg")
+                image = image.resize((200, 200), Image.Resampling.LANCZOS)
+                photo = ImageTk.PhotoImage(image)
+                self.image_label.configure(image=photo)
+                self.image_label.image = photo
 
     def añadir_actividad(self):
         # Obtener el síntoma seleccionado
