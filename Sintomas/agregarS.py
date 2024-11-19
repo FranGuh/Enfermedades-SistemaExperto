@@ -30,7 +30,7 @@ def menu_agregarActividad(master):
         if nombre and imagen:
             try:
                 # Establecer la conexión a la base de datos
-                db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
+                db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
 
                 # Preparar la consulta de inserción
                 query = "INSERT INTO Actividads (Nombre, Imagen) VALUES (%s, %s)"
@@ -72,7 +72,7 @@ def menu_agregarActividad(master):
         tree.configure(yscrollcommand=scrollbar.set)
 
         try:
-            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
+            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
             query = "SELECT Id_Actividad,Nombre, Imagen FROM Actividads"
             objetos = db_controlador.obtener_datos(query)
 
@@ -242,7 +242,7 @@ def menu_agregarActividad(master):
         global objetos
         try:
             # Establecer la conexión a la base de datos
-            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento')
+            db_controlador = ControladorDB('localhost', 'roger', '1234', 'Conocimiento3')
 
             # Consulta para obtener todos los objetos
             query = "SELECT Nombre, Imagen FROM Actividads"
