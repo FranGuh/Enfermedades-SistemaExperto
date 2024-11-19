@@ -114,7 +114,7 @@ class BusquedaActividad:
             messagebox.showinfo("Información", "Seleccione una actividad en la tabla para eliminarlo.")
 
     def ejecutar_inferencia(self):
-        # Obtener IDs de los síntomas seleccionados
+    # Obtener IDs de los síntomas seleccionados
         id_actividades = [int(self.relation_table.item(item, "values")[0]) for item in self.relation_table.get_children()]
 
         if not id_actividades:
@@ -140,7 +140,7 @@ class BusquedaActividad:
             self.cursor.execute(consulta_query)
             resultados = self.cursor.fetchall()
 
-            # Obtener nombres de síntomas seleccionados para la justificación
+            # Obtener nombres de actividades seleccionadas para la justificación
             actividad_nombres_query = "SELECT nombre FROM Actividad WHERE Id_Actividad IN (%s)" % ",".join(map(str, id_actividades))
             self.cursor.execute(actividad_nombres_query)
             actividades_nombres = [row[0] for row in self.cursor.fetchall()]
@@ -148,25 +148,48 @@ class BusquedaActividad:
 
             # Generar mensaje con nombres de deportes y cálculo de porcentajes
             mensaje = "Los 5 deportes más probables (de mayor a menor) son:\n\n"
+            deporte_principal = None
             for deporte_id, probabilidad_acumulada in resultados:
                 # Obtener datos del deporte desde la tabla Deporte
                 deporte_query = "SELECT nombre, peso FROM Deporte WHERE Id_Deporte = %s"
                 self.cursor.execute(deporte_query, (deporte_id,))
                 deporte_data = self.cursor.fetchone()
-                
+
                 if deporte_data:
                     nombre_deporte, peso_deporte = deporte_data
                     porcentaje_probabilidad = (probabilidad_acumulada / peso_deporte) * 100
+                    if not deporte_principal:
+                        deporte_principal = nombre_deporte  # Guardar el deporte más probable
 
                     # Formatear mensaje para cada deporte
                     mensaje += f"Deporte: {nombre_deporte}\n"
                     mensaje += f" - Probabilidad estimada: {porcentaje_probabilidad:.2f}%\n\n"
 
-            # Añadir justificación al final del mensaje
-            mensaje += f"Justificación: Debido a que tienes las siguientes actividades: {actividades_texto}."
+            # Añadir justificación al final del mensaje (este se añadió en el modulo de explicación :D)
+            #mensaje += f"Justificación: Debido a que tienes las siguientes actividades: {actividades_texto}."
 
-            # Muestra el mensaje con los deportes y su probabilidad calculada
-            messagebox.showinfo("Inferencia", mensaje)
+            # Crear una ventana personalizada para mostrar resultados e incluir el botón "Continuar"
+            ventana_resultados = tk.Toplevel(self.root)
+            ventana_resultados.title("Inferencia")
+            ventana_resultados.geometry("500x400")
+
+            # Mostrar resultados de la inferencia
+            etiqueta_resultados = tk.Label(ventana_resultados, text=mensaje, justify="left", wraplength=480)
+            etiqueta_resultados.pack(pady=20)
+
+            # Botón para continuar con las preguntas
+            def continuar_preguntas():
+                ventana_resultados.destroy()
+                if deporte_principal:
+                    self.preguntar_otras_actividades(deporte_principal)
+
+            boton_continuar = tk.Button(ventana_resultados, text="Continuar", command=continuar_preguntas)
+            boton_continuar.pack(pady=10)
+
+            # Botón para cerrar la ventana sin hacer nada más
+            boton_cerrar = tk.Button(ventana_resultados, text="Cerrar", command=ventana_resultados.destroy)
+            boton_cerrar.pack(pady=10)
+
 
             # Devuelve bandera a 0 en la tabla relacion
             self.cursor.execute("UPDATE relacion SET bandera = 0")
@@ -174,6 +197,151 @@ class BusquedaActividad:
 
         except mysql.connector.Error as err:
             messagebox.showerror("Error", f"Error al ejecutar la inferencia: {err}")
+
+    def preguntar_otras_actividades(self, deporte_principal):
+    # Crear una lista con las actividades relacionadas que no han sido seleccionadas previamente
+        try:
+            # Consulta para obtener actividades relacionadas al deporte
+            query = """
+                SELECT a.Id_Actividad, a.nombre 
+                FROM Actividad a
+                JOIN relacion r ON a.Id_Actividad = r.id_actividad
+                WHERE r.Id_Deporte = (SELECT Id_Deporte FROM Deporte WHERE nombre = %s)
+            """
+            self.cursor.execute(query, (deporte_principal,))
+            actividades_relacionadas = self.cursor.fetchall()
+
+            # Filtrar actividades que ya han sido seleccionadas en el Treeview
+            actividades_seleccionadas = {
+                self.relation_table.item(item, "values")[0] for item in self.relation_table.get_children()
+            }
+            actividades_pendientes = [
+                actividad for actividad in actividades_relacionadas if str(actividad[0]) not in actividades_seleccionadas
+            ]
+        except mysql.connector.Error as err:
+            messagebox.showerror("Error", f"No se pudieron obtener las actividades relacionadas: {err}")
+            return
+
+        # Función para preguntar por cada actividad pendiente
+        def iterar_actividades():
+            if not actividades_pendientes:
+                messagebox.showinfo("Información", "No hay más actividades relacionadas pendientes.")
+                return
+
+            actividad_actual = actividades_pendientes.pop(0)  # Tomar la primera actividad de la lista
+            actividad_id, actividad_nombre = actividad_actual
+
+            # Crear una ventana emergente para preguntar sobre la actividad actual
+            ventana_actividad = tk.Toplevel(self.root)
+            ventana_actividad.title("Actividad Relacionada")
+            ventana_actividad.geometry("400x200")
+
+            etiqueta = tk.Label(
+                ventana_actividad,
+                text=f"La actividad '{actividad_nombre}' se presenta en el deporte '{deporte_principal}'?"
+            )
+            etiqueta.pack(pady=20)
+
+            # Botón "Sí"
+            def respuesta_si():
+                # Añadir actividad al Treeview si es confirmada
+                self.relation_table.insert("", "end", values=(actividad_id, actividad_nombre))
+                ventana_actividad.destroy()
+                iterar_actividades()  # Pasar a la siguiente actividad
+
+            boton_si = tk.Button(ventana_actividad, text="Sí", command=respuesta_si)
+            boton_si.pack(side=tk.LEFT, padx=50, pady=20)
+
+            # Botón "No"
+            def respuesta_no():
+                ventana_actividad.destroy()
+                self.mostrar_conclusion()
+                #iterar_actividades()  # Pasar a la siguiente actividad
+
+            boton_no = tk.Button(ventana_actividad, text="No", command=respuesta_no)
+            boton_no.pack(side=tk.RIGHT, padx=50, pady=20)
+
+            # Botón "No sé"
+            def respuesta_no_se():
+                ventana_actividad.destroy()
+                iterar_actividades()  # Pasar a la siguiente actividad
+
+            boton_no_se = tk.Button(ventana_actividad, text="No sé", command=respuesta_no_se)
+            boton_no_se.pack(side=tk.RIGHT, padx=50, pady=20)
+
+        # Iniciar la iteración de actividades pendientes
+        iterar_actividades()
+
+    def mostrar_conclusion(self):
+        # Obtener IDs de los síntomas seleccionados
+        id_actividades = [int(self.relation_table.item(item, "values")[0]) for item in self.relation_table.get_children()]
+
+        if not id_actividades:
+            messagebox.showinfo("Información", "Seleccione al menos una actividad para ejecutar la inferencia.")
+            return
+
+        try:
+            # Actualizar bandera = 1 en la tabla relacion donde id_actividad coincide
+            update_query = "UPDATE relacion SET bandera = 1 WHERE id_actividad = %s"
+            for id_actividad in id_actividades:
+                self.cursor.execute(update_query, (id_actividad,))
+            self.conn.commit()
+
+            # Consulta para obtener el deporte con la mayor probabilidad
+            consulta_query = """
+                SELECT Id_Deporte, SUM(probabilidad) as total_probabilidad
+                FROM relacion
+                WHERE bandera = 1
+                GROUP BY Id_Deporte
+                ORDER BY total_probabilidad DESC
+                LIMIT 1  -- Solo obtenemos el deporte con mayor probabilidad
+            """
+            self.cursor.execute(consulta_query)
+            resultado = self.cursor.fetchone()
+
+            if resultado:
+                deporte_id, probabilidad_acumulada = resultado
+
+                # Obtener nombres de actividades seleccionadas para la justificación
+                actividad_nombres_query = "SELECT nombre FROM Actividad WHERE Id_Actividad IN (%s)" % ",".join(map(str, id_actividades))
+                self.cursor.execute(actividad_nombres_query)
+                actividades_nombres = [row[0] for row in self.cursor.fetchall()]
+                actividades_texto = ", ".join(actividades_nombres)
+
+                # Obtener datos del deporte desde la tabla Deporte
+                deporte_query = "SELECT nombre, peso FROM Deporte WHERE Id_Deporte = %s"
+                self.cursor.execute(deporte_query, (deporte_id,))
+                deporte_data = self.cursor.fetchone()
+
+                if deporte_data:
+                    nombre_deporte, peso_deporte = deporte_data
+                    porcentaje_probabilidad = (probabilidad_acumulada / peso_deporte) * 100
+
+                    # Generar el mensaje de conclusión con el deporte más probable
+                    mensaje = f"CONCLUSIÓN:\n\nEl {nombre_deporte} es tu deporte más probable con un {porcentaje_probabilidad:.2f}% de probabilidad, "
+                    mensaje += f"debido a que tienes las siguientes actividades seleccionadas: \n\n"
+
+                    # Agregar las actividades en formato de lista
+                    for actividad in actividades_nombres:
+                        mensaje += f" - {actividad}\n"
+
+
+                    # Mostrar el mensaje usando messagebox con solo el botón "Aceptar"
+                    def on_accept():
+                        messagebox.showinfo("Módulo de explicación", mensaje)
+                        self.ejecutar_inferencia()  # Regresa a la lógica de inferencia
+
+                    # Mostrar el mensaje
+                    on_accept()  # Llamamos a la función para mostrar el mensaje y regresar a inferencia
+
+            # Devuelve bandera a 0 en la tabla relacion
+            self.cursor.execute("UPDATE relacion SET bandera = 0")
+            self.conn.commit()
+
+        except mysql.connector.Error as err:
+            messagebox.showerror("Error", f"Error al ejecutar la inferencia: {err}")
+
+
 
 
 # Creación de la ventana
