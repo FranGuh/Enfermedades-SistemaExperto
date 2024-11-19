@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 import mysql.connector
 
+
 class BusquedaActividad:
     def __init__(self, root):
         self.root = root
@@ -120,7 +121,7 @@ class BusquedaActividad:
             messagebox.showinfo("Información", "Seleccione una actividad en la tabla para eliminarlo.")
 
     def ejecutar_inferencia(self):
-        # Obtener IDs de los síntomas seleccionados
+        # Obtener IDs de las actividades seleccionadas
         id_actividades = [int(self.relation_table.item(item, "values")[0]) for item in self.relation_table.get_children()]
 
         if not id_actividades:
@@ -146,7 +147,7 @@ class BusquedaActividad:
             self.cursor.execute(consulta_query)
             resultados = self.cursor.fetchall()
 
-            # Obtener nombres de síntomas seleccionados para la justificación
+            # Obtener nombres de actividades seleccionadas para la justificación
             actividad_nombres_query = "SELECT nombre FROM Actividad WHERE Id_Actividad IN (%s)" % ",".join(map(str, id_actividades))
             self.cursor.execute(actividad_nombres_query)
             actividades_nombres = [row[0] for row in self.cursor.fetchall()]
@@ -171,8 +172,18 @@ class BusquedaActividad:
             # Añadir justificación al final del mensaje
             mensaje += f"Justificación: Debido a que tienes las siguientes actividades: {actividades_texto}."
 
-            # Muestra el mensaje con los deportes y su probabilidad calculada
-            messagebox.showinfo("Inferencia", mensaje)
+            # Crear una nueva ventana para mostrar resultados
+            resultado_ventana = tk.Toplevel(self.root)
+            resultado_ventana.title("Resultados de la Inferencia")
+            resultado_ventana.geometry("600x400")
+
+            # Mostrar el mensaje en la nueva ventana
+            tk.Label(resultado_ventana, text=mensaje, wraplength=500, justify="left").pack(pady=10)
+
+            # Botón para cerrar la ventana de resultados
+            cerrar_btn = tk.Button(resultado_ventana, text="Cerrar", command=resultado_ventana.destroy)
+            cerrar_btn.pack(side="left", padx=20, pady=20)
+            continuar_btn.pack(side="right", padx=20, pady=20)
 
             # Devuelve bandera a 0 en la tabla relacion
             self.cursor.execute("UPDATE relacion SET bandera = 0")
